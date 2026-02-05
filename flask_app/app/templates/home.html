@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Beginner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Welcome to Flask</h1>
+
+    <form action="/hello" method="post">
+        <input type="text" name="name" placeholder="Enter name">
+        <button type="submit">Submit</button>
+    </form>
+
+</body>
+</html>
