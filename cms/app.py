@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_mysqldb import MySQL
+from werkzeug.security import generate_password_hash, check_password_hash
 import MySQLdb.cursors
 
 app = Flask(__name__)
@@ -24,10 +25,10 @@ def login():
         password = request.form['password']
         
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
         user = cursor.fetchone()
         
-        if user:
+        if user and check_password_hash(user['password'], password):
             session['loggedin'] = True
             session['id'] = user['id']
             session['username'] = user['username']
@@ -44,8 +45,12 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         
+        # Hash passsss
+        hashed_password = generate_password_hash(password)
+        
         cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", (username, email, password))
+        cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)", 
+                    (username, email, hashed_password))
         mysql.connection.commit()
         cursor.close()
         
