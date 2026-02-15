@@ -36,6 +36,7 @@ def login():
         else:
             flash('Invalid username or password!')
     
+    
     return render_template('login.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -64,6 +65,8 @@ def dashboard():
     if 'loggedin' in session:
         return render_template('dashboard.html', username=session['username'])
     return redirect(url_for('login'))
+
+
 
 @app.route('/logout')
 def logout():
