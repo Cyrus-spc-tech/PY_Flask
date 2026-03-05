@@ -3,98 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="email"], input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.5s;
-        }
-        button:hover {
-            background-color: #5ba610;
-        }
-        .success {
-            color: green;
-            margin-bottom: 10px;
-        }
-        .link {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .link a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <title>Sign Up - Course Management System</title>
+    <link rel="stylesheet" href="/static/signup.css">
 </head>
 <body>
-    <h2>Sign Up</h2>
-    
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p class="success">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    
-    <form method="POST" action="{{ url_for('signup') }}">
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-        </div>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
         
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="success">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
         
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-        </div>
+        <form method="POST" action="{{ url_for('signup') }}">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required placeholder="Choose a username">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required placeholder="Create a password">
+                <div class="password-strength" id="passwordStrength"></div>
+            </div>
+            
+            <button type="submit">Sign Up</button>
+        </form>
         
-        <button type="submit">Sign Up</button>
-    </form>
-    
-    <div class="link">
-        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        <div class="link">
+            <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+        </div>
     </div>
+    
+    <script>
+        // Password strength indicator
+        const passwordInput = document.getElementById('password');
+        const strengthIndicator = document.getElementById('passwordStrength');
+        
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            
+            strengthIndicator.className = 'password-strength';
+            
+            if (password.length > 0) {
+                if (strength <= 1) {
+                    strengthIndicator.classList.add('strength-weak');
+                } else if (strength === 2) {
+                    strengthIndicator.classList.add('strength-medium');
+                } else {
+                    strengthIndicator.classList.add('strength-strong');
+                }
+            }
+        });
+        
+        // Form validation
+        const form = document.querySelector('form');
+        const inputs = form.querySelectorAll('input');
+        
+        inputs.forEach(input => {
+            input.addEventListener('blur', function() {
+                const formGroup = this.parentElement;
+                if (this.checkValidity()) {
+                    formGroup.classList.add('valid');
+                    formGroup.classList.remove('invalid');
+                } else {
+                    formGroup.classList.add('invalid');
+                    formGroup.classList.remove('valid');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
