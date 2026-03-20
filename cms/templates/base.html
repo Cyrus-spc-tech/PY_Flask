@@ -143,9 +143,16 @@
         a:hover {
             text-decoration: underline;
         }
+
+        script{
+            z-index: -1;
+        }
     </style>
 </head>
 <body>
+    <div>
+       
+
     <nav class="navbar">
         <div class="nav-container">
             <a href="{{ url_for('home') }}" class="nav-brand">MyAuth</a>
@@ -176,6 +183,7 @@
             
             {% block content %}{% endblock %}
         </div>
+    </div>
     </div>
 </body>
 </html>

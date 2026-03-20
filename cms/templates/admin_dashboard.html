@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Course Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <style>
+        .admin-dashboard {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .dashboard-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .dashboard-title {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dashboard-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            margin-bottom: 0;
+        }
+        
+        .admin-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .action-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .action-title {
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .action-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+        
+        .action-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+        
+        .action-btn.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .action-btn.danger:hover {
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        }
+        
+        .stats-section {
+            margin-bottom: 40px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            color: #ffffff;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .recent-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px 25px;
+        }
+        
+        .recent-title {
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .recent-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .recent-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        
+        .recent-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .recent-info {
+            flex: 1;
+        }
+        
+        .recent-name {
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .recent-meta {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.85rem;
+        }
+        
+        .recent-status {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+        
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-dashboard {
+                padding: 30px 20px;
+            }
+            
+            .admin-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .dashboard-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="admin-dashboard">
+            <div class="dashboard-header">
+                <a href="{{ url_for('dashboard') }}" class="back-link">← Back to Dashboard</a>
+                <h1 class="dashboard-title">Admin Dashboard</h1>
+                <p class="dashboard-subtitle">Manage your Course Management System</p>
+                <div style="margin-top: 20px;">
+                    <a href="{{ url_for('logout') }}" class="action-btn danger" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+                        🚪 Logout
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Statistics Section -->
+            <div class="stats-section">
+                <h2 style="color: #ffffff; text-align: center; margin-bottom: 25px;">System Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.total_users if stats is defined else '0' }}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.total_courses if stats is defined else '0' }}</div>
+                        <div class="stat-label">Total Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.active_courses if stats is defined else '0' }}</div>
+                        <div class="stat-label">Active Courses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">{{ stats.total_enrollments if stats is defined else '0' }}</div>
+                        <div class="stat-label">Total Enrollments</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Admin Actions -->
+            <div class="admin-actions">
+                <div class="action-card" onclick="window.location.href='{{ url_for('create_course') }}'">
+                    <span class="action-icon">📚</span>
+                    <h3 class="action-title">Create Course</h3>
+                    <p class="action-description">Create new courses and assign instructors</p>
+                    <a href="{{ url_for('create_course') }}" class="action-btn">Create Course</a>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='{{ url_for('courses') }}'">
+                    <span class="action-icon">📖</span>
+                    <h3 class="action-title">Browse Courses</h3>
+                    <p class="action-description">View and manage all courses in the system</p>
+                    <a href="{{ url_for('courses') }}" class="action-btn">Browse Courses</a>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='#'">
+                    <span class="action-icon">👥</span>
+                    <h3 class="action-title">Manage Users</h3>
+                    <p class="action-description">Add, edit, and remove user accounts</p>
+                    <a href="#" class="action-btn" onclick="alert('User management feature coming soon!')">Manage Users</a>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='#'">
+                    <span class="action-icon">📊</span>
+                    <h3 class="action-title">View Reports</h3>
+                    <p class="action-description">Generate reports and analytics</p>
+                    <a href="#" class="action-btn" onclick="alert('Reports feature coming soon!')">View Reports</a>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='#'">
+                    <span class="action-icon">⚙️</span>
+                    <h3 class="action-title">System Settings</h3>
+                    <p class="action-description">Configure system preferences and settings</p>
+                    <a href="#" class="action-btn danger" onclick="alert('System settings feature coming soon!')">System Settings</a>
+                </div>
+                
+                <div class="action-card" onclick="window.location.href='#'">
+                    <span class="action-icon">📧</span>
+                    <h3 class="action-title">Send Notifications</h3>
+                    <p class="action-description">Send announcements to users</p>
+                    <a href="#" class="action-btn" onclick="alert('Notifications feature coming soon!')">Send Notifications</a>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="recent-section">
+                <h3 class="recent-title">Recent Activity</h3>
+                <ul class="recent-list">
+                    {% if recent_activity %}
+                        {% for activity in recent_activity %}
+                            <li class="recent-item">
+                                <div class="recent-info">
+                                    <div class="recent-name">{{ activity.title }}</div>
+                                    <div class="recent-meta">{{ activity.date }} by {{ activity.user }}</div>
+                                </div>
+                                <div class="recent-status status-{{ activity.status|lower }}">{{ activity.status }}</div>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="recent-item" style="text-align: center; color: rgba(255, 255, 255, 0.6);">
+                            No recent activity to display
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -3,120 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>Dashboard - Course Management System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .welcome {
-            color: #666;
-            font-size: 18px;
-        }
-        .card {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        .card h2 {
-            color: #333;
-            margin-top: 0;
-        }
-        .info {
-            margin-bottom: 10px;
-        }
-        .info strong {
-            color: #007bff;
-        }
-        .actions {
-            margin-top: 20px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            cursor: pointer;
-            border: none;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        .logout {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .logout a {
-            color: #dc3545;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .logout a:hover {
-            text-decoration: underline;
-        }
+        
+       
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Dashboard</h1>
-        <p class="welcome">Hello, {{ username }}! You are successfully logged in.</p>
-    </div>
-    
-    <div class="card">
-        <h2>Welcome to your Dashboard!</h2>
-        <div class="info">
-            <p><strong>User:</strong> {{ username }}</p>
-            <p><strong>Role:</strong> {{ current_user.role }}</p>
-            <p><strong>Email:</strong> {{ current_user.email }}</p>
-            {% if current_user.phone %}
-            <p><strong>Phone:</strong> {{ current_user.phone }}</p>
-            {% endif %}
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <a href="{{ url_for('index') }}" class="back-link">← Back to Home</a>
+            <h1 class="dashboard-title">Dashboard</h1>
+            <p class="welcome-subtitle">Welcome back, {{ username }}!</p>
+        </div>
+        
+        <div class="user-info-grid">
+            <div class="info-card">
+                <span class="info-icon">👤</span>
+                <h3 class="info-title">User Profile</h3>
+                <div class="info-value">
+                    <strong>{{ username }}</strong><br>
+                    {{ current_user.role }}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <span class="info-icon">📧</span>
+                <h3 class="info-title">Contact Info</h3>
+                <div class="info-value">
+                    {{ current_user.email }}<br>
+                    {% if current_user.phone %}
+                        {{ current_user.phone }}
+                    {% else %}
+                        No phone number
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="info-card">
+                <span class="info-icon">📊</span>
+                <h3 class="info-title">Account Status</h3>
+                <div class="info-value">
+                    <span style="color: #4ade80;">✓ Active</span><br>
+                    Member since registration
+                </div>
+            </div>
+        </div>
+        
+        <div class="actions-section">
+            <h2 class="actions-title">Quick Actions</h2>
+            <div class="actions-grid">
+                {% if current_user.role == 'Student' %}
+                    <a href="{{ url_for('courses') }}" class="action-btn">
+                        📚 Browse Courses
+                    </a>
+                    <a href="#" class="action-btn" onclick="alert('My courses feature coming soon!')">
+                        📖 My Courses
+                    </a>
+                    <a href="#" class="action-btn" onclick="alert('Assignments feature coming soon!')">
+                        📝 My Assignments
+                    </a>
+                {% elif current_user.role == 'Instructor' %}
+                    <a href="{{ url_for('create_course') }}" class="action-btn danger">
+                        ➕ Create Course
+                    </a>
+                    <a href="{{ url_for('courses') }}" class="action-btn">
+                        📚 My Courses
+                    </a>
+                    <a href="#" class="action-btn" onclick="alert('Student management feature coming soon!')">
+                        👥 Manage Students
+                    </a>
+                {% elif current_user.role == 'Admin' %}
+                    <a href="{{ url_for('dashboard') }}" class="action-btn">
+                        🎛️ Admin Dashboard
+                    </a>
+                    <a href="{{ url_for('courses') }}" class="action-btn">
+                        📚 Manage Courses
+                    </a>
+                    <a href="#" class="action-btn danger" onclick="alert('User management feature coming soon!')">
+                        👥 Manage Users
+                    </a>
+                    <a href="#" class="action-btn danger" onclick="alert('System settings feature coming soon!')">
+                        ⚙️ System Settings
+                    </a>
+                    <a href="#" class="action-btn danger" onclick="alert('Reports feature coming soon!')">
+                        📊 View Reports
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="logout-section">
+            <a href="{{ url_for('logout') }}" class="logout-btn">
+                🚪 Logout
+            </a>
         </div>
     </div>
-    
-    <div class="card">
-        <h2>Role-based Actions</h2>
-        <div class="actions">
-            {% if current_user.role == 'Student' %}
-                <button class="btn" onclick="alert('View enrolled courses feature coming soon!')">My Courses</button>
-                <button class="btn" onclick="alert('Browse courses feature coming soon!')">Browse Courses</button>
-                <button class="btn" onclick="alert('Assignments feature coming soon!')">My Assignments</button>
-            {% elif current_user.role == 'Instructor' %}
-                <button class="btn" onclick="alert('Create course feature coming soon!')">Create Course</button>
-                <button class="btn" onclick="alert('My courses feature coming soon!')">My Courses</button>
-                <button class="btn" onclick="alert('Student management feature coming soon!')">Manage Students</button>
-            {% elif current_user.role == 'Admin' %}
-                <button class="btn btn-danger" onclick="alert('User management feature coming soon!')">Manage Users</button>
-                <button class="btn btn-danger" onclick="alert('System settings feature coming soon!')">System Settings</button>
-                <button class="btn btn-danger" onclick="alert('Reports feature coming soon!')">View Reports</button>
-            {% endif %}
-        </div>
-    </div>
-    
-    <div class="logout">
-        <a href="{{ url_for('logout') }}">Logout</a>
-    </div>          
 </body>
 </html>
