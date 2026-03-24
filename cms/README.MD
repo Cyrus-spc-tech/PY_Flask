@@ -1,8 +1,8 @@
-# Course Management System (CMS)
+# *`Course Management System (CMS)`*
 
 A comprehensive course management system built with Flask and MySQL, featuring modern glassmorphism UI, user authentication, role-based access control, and complete course administration capabilities.
 
-## 📁 Project Structure
+## `>> Project Structure`
 
 ```
 cms/
@@ -25,23 +25,23 @@ cms/
 └── README.md          # This documentation
 ```
 
-## 👥 User Roles
+## `>> User Roles`
 
-### **Student**
+> ### **Student**
 
 - Browse available courses
 - View course details
 - Enroll in courses
 - Track assignments
 
-### **Instructor**
+> ### **Instructor**
 
 - Create and manage courses
 - View enrolled students
 - Manage course content
 - Track student progress
 
-### **Admin**
+> ### **Admin**
 
 - Full system administration
 - User management
